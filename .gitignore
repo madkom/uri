@@ -2,4 +2,5 @@
 bin
 vendor
 tests/coverage/*
+!tests/coverage/.gitkeep
 test.php
