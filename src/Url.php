@@ -18,17 +18,6 @@ use ReflectionClass;
  */
 class Url extends Uri
 {
-    public function __construct(string $uri)
-    {
-        $this->parse($uri);
-        if (!($this->scheme instanceof NetworkScheme)) {
-            $this->scheme = new Http();
-        }
-        if (!$this->port) {
-            $this->port = $this->scheme->getPort();
-        }
-    }
-
     /**
      * @param Uri $uri
      * @return Url

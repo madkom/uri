@@ -38,19 +38,7 @@ class UserInfo implements Component
         $this->setUsername($username);
         $this->setPassword($password);
     }
-
-    /**
-     * Custom constructor from string
-     * @param string $userInfo
-     * @return UserInfo
-     */
-    public static function createFromString(string $userInfo) : self
-    {
-        list($username, $password) = explode(self::DELIMITER, $userInfo);
-
-        return new self($username, $password);
-    }
-
+    
     /**
      * Retrieve username
      * @return string

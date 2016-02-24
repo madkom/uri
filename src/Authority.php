@@ -80,7 +80,7 @@ class Authority implements Component
      */
     public function setPort(int $port)
     {
-        if ($port <= 0 && $port > 65535) {
+        if ($port <= 0 || $port > 65535) {
             throw new InvalidArgumentException("Invalid port number, must be in range 0-65535, given: {$port}");
         }
 

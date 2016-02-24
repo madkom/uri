@@ -58,7 +58,8 @@ class Parameter
      */
     public function toString() : string
     {
-        return sprintf("{$this->name}=%s", urlencode($this->value));
+        return http_build_query([$this->getName() => $this->getValue()]);
+//        return sprintf("{$this->name}=%s", urlencode($this->value));
     }
 
     /**

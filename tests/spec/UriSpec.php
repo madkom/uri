@@ -34,6 +34,7 @@ class UriSpec extends ObjectBehavior
     {
         $this->getScheme()->shouldReturnAnInstanceOf(Scheme::class);
         $this->getAuthority()->shouldReturnAnInstanceOf(Authority::class);
+
         $this->getQuery()->shouldReturnAnInstanceOf(Query::class);
         $this->getPath()->shouldReturnAnInstanceOf(Path::class);
 
@@ -58,5 +59,6 @@ class UriSpec extends ObjectBehavior
     function it_can_get_string_representation()
     {
         $this->toString()->shouldBeString();
+        $this->__toString()->shouldBeString();
     }
 }

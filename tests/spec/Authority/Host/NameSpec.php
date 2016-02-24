@@ -31,6 +31,8 @@ class NameSpec extends ObjectBehavior
         $this->beConstructedWith($name);
         $this->getAddress()->shouldReturn('xn--za-gl-ja-w3a7psa2tqtgb10airva.pl');
         $this->getUnicode()->shouldReturn($name);
+        $this->toString()->shouldReturn('xn--za-gl-ja-w3a7psa2tqtgb10airva.pl');
+        $this->__toString()->shouldReturn('xn--za-gl-ja-w3a7psa2tqtgb10airva.pl');
     }
 
     function it_fails_on_invalid_address_instantiation()

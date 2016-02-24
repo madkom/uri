@@ -31,6 +31,8 @@ class ParameterSpec extends ObjectBehavior
         $this->beConstructedWith($name, $value);
         $this->getName()->shouldReturn($name);
         $this->getValue()->shouldReturn($value);
+        $this->toString()->shouldReturn('name%5Ba%5D=1');
+        $this->__toString()->shouldReturn('name%5Ba%5D=1');
     }
     function it_can_get_name_and_null_value()
     {
@@ -38,11 +40,8 @@ class ParameterSpec extends ObjectBehavior
         $this->beConstructedWith($name);
         $this->getName()->shouldReturn($name);
         $this->getValue()->shouldReturn(null);
-    }
-
-    function it_can_return_string_representation_with_empty_value()
-    {
-        $this->toString()->shouldReturn('name=');
+        $this->toString()->shouldReturn('');
+        $this->__toString()->shouldReturn('');
     }
 
     function it_can_return_string_representation_with_value()

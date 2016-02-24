@@ -17,27 +17,7 @@ use Madkom\Uri\Query\Parameter;
  */
 class Query extends CustomDistinctCollection
 {
-    const DUPLICATES_NATIVE = 0;
-    const DUPLICATES_AS_ARRAY = 1;
-    const DUPLICATES_WITH_COLON = 2;
-
     const DELIMITER = '&';
-    /**
-     * Custom constructor from String
-     * @param string $queryString
-     * @return Query
-     */
-    public static function createFromString(string $queryString) : self
-    {
-        $query = new self();
-        parse_str($queryString, $parameters);
-        foreach ($parameters as $name => $value) {
-            $query->add(new Parameter($name, $value));
-        }
-
-        return $query;
-    }
-
     /**
      * @return string
      */
@@ -56,11 +36,12 @@ class Query extends CustomDistinctCollection
 
     /**
      * Retrieve query as query string
+     * @param string $delimiter
      * @return string
      */
-    public function toString() : string
+    public function toString(string $delimiter = self::DELIMITER) : string
     {
-        return ($this->count() > 0 ? '?' : '') . implode(self::DELIMITER, $this->elements);
+        return implode($delimiter, $this->elements);
     }
 
     /**

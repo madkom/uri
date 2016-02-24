@@ -25,9 +25,6 @@ use ML\IRI\IRI;
  */
 class Uri
 {
-    const QUERY_DUPLICATES_NATIVE = Query::DUPLICATES_NATIVE;
-    const QUERY_DUPLICATES_AS_ARRAY = Query::DUPLICATES_AS_ARRAY;
-    const QUERY_DUPLICATES_WITH_COLON = Query::DUPLICATES_WITH_COLON;
     /**
      * @var Scheme|null Holds scheme component
      */
@@ -48,7 +45,7 @@ class Uri
      * @var string|null Holds fragment component
      */
     protected $fragment = null;
-    
+
     /**
      * Uri constructor.
      * @param Scheme $scheme

@@ -7,6 +7,9 @@
  */
 namespace Madkom\Uri\Parser;
 
+use Madkom\Uri\Query\Parameter;
+use UnexpectedValueException;
+
 /**
  * Class Query
  * @package Madkom\Uri\Parser
@@ -14,8 +17,31 @@ namespace Madkom\Uri\Parser;
  */
 class Query
 {
-    public function parse(string $queryString) : \Madkom\Uri\Query
+    // Parse mode where parameter duplicate replaces previous parameter
+    const DUPLICATE_LAST = 1;
+    // TODO: implement
+    const DUPLICATES_AS_ARRAY = 1;
+    const DUPLICATES_WITH_COLON = 2;
+    /**
+     * Parse query string into query
+     * @param string $queryString String with query to parse
+     * @param int $mode Parse mode {@see self::DUPLICATE_LAST}
+     * @return \Madkom\Uri\Query
+     */
+    public function parse(string $queryString, int $mode = 1) : \Madkom\Uri\Query
     {
+        $query = new \Madkom\Uri\Query();
+        switch ($mode) {
+            case self::DUPLICATE_LAST:
+                parse_str($queryString, $parameters);
+                foreach ($parameters as $name => $value) {
+                    $query->add(new Parameter($name, $value));
+                }
+                break;
+            default:
+                throw new UnexpectedValueException("Unsupported query parser mode, given: {$mode}");
+        }
 
+        return $query;
     }
 }

@@ -28,6 +28,8 @@ class IPv6Spec extends ObjectBehavior
     function it_can_retrieve_valid_address()
     {
         $this->getAddress()->shouldBeString();
+        $this->toString()->shouldReturn('::1');
+        $this->__toString()->shouldReturn('::1');
     }
 
     function it_fails_on_invalid_address_instantiation()

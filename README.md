@@ -1,7 +1,8 @@
 Uniform Resource Identifier (URI) and Uniform Resource Locator (URL)
 ====================================================================
 
-This library implements URI and URL specification, based on Java impl (java.net) 
+This library implements URI and URL specification, based on Java impl and partially on 
+[RFC3986](https://tools.ietf.org/html/rfc3986). 
 
 ---
 
@@ -11,6 +12,52 @@ Install with Composer
 
 ```
 composer require madkom/uri
+```
+
+## Usage
+
+Parsing url string:
+
+```php
+$parser = new \Madkom\Uri\Parser();
+$uri = $parser->parse('http://user:pass@host.tld/some/path?and=query&param=2#fragment'); // Instance of \Madkom\Uri\Uri
+$uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Http
+$uri->getAuthority(); // Instance of \Madkom\Uri\Authority
+$uri->getPath(); // Instance of \Madkom\Uri\Path
+$uri->getQuery(); // Instance of \Madkom\Uri\Query
+```
+
+> **TODO** Missing fragment impl yet.
+
+Parsing isbn uri:
+
+```php
+$parser = new \Madkom\Uri\Parser();
+$uri = $parser->parse('isbn:978-83-283-0525-0'); // Instance of \Madkom\Uri\Uri
+$uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Custom
+$uri->getAuthority(); // NULL
+$uri->getPath(); // Instance of \Madkom\Uri\Path with "978-83-283-0525-0"
+$uri->getQuery(); // Instance of \Madkom\Uri\Query which is empty
+```
+
+Creating URI object:
+
+```php
+$uri = new \Madkom\Uri\Uri(
+    new \Madkom\Uri\Scheme\Https(),
+    new \Madkom\Uri\Authority(
+        new \Madkom\Uri\Host\IPv6('::1'),
+        443,
+        new \Madkom\Uri\Authority\UserInfo('user', 'pass')
+    ),
+    new \Madkom\Uri\Path([
+        'some',
+        'path'
+    ]),
+    new \Madkom\Uri\Query([
+        new \Madkom\Uri\Query\Parameter('name', 'value')
+    ])
+);
 ```
 
 ## License

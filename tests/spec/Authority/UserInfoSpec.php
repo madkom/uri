@@ -31,6 +31,9 @@ class UserInfoSpec extends ObjectBehavior
         $this->getUsername()->shouldReturn('m.brzuchalski');
         $this->setPassword('ala-ma-kota!');
         $this->getPassword()->shouldReturn('ala-ma-kota!');
+
+        $this->toString()->shouldReturn('m.brzuchalski:ala-ma-kota!');
+        $this->__toString()->shouldReturn('m.brzuchalski:ala-ma-kota!');
     }
 
     function it_fails_on_invalid_username_or_password()

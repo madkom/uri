@@ -2,6 +2,7 @@
 
 namespace spec\Madkom\Uri;
 
+use InvalidArgumentException;
 use Madkom\Uri\Authority;
 use Madkom\Uri\Authority\Host;
 use Madkom\Uri\Authority\UserInfo;
@@ -20,7 +21,9 @@ class AuthoritySpec extends ObjectBehavior
     function let(Host $host, UserInfo $userInfo)
     {
         $userInfo->__toString()->willReturn('m.brzuchalski:ala-ma-kota!');
-        $this->beConstructedWith(new Name('localhost'), 80, $userInfo);
+        $host->getAddress()->willReturn('localhost');
+        $host->__toString()->willReturn('localhost');
+        $this->beConstructedWith($host, 80, $userInfo);
     }
 
     function it_is_initializable()
@@ -32,15 +35,24 @@ class AuthoritySpec extends ObjectBehavior
     {
         $this->setHost($host);
         $this->getHost()->shouldReturn($host);
+
         $this->setPort(80);
         $this->getPort()->shouldReturn(80);
+        $this->shouldThrow(InvalidArgumentException::class)->during('setPort', [80000]);
+        $this->shouldThrow(InvalidArgumentException::class)->during('setPort', [-1]);
+
         $this->setUserInfo($userInfo);
         $this->getUserInfo()->shouldReturn($userInfo);
     }
 
     function it_can_get_string_representation()
     {
-//        $userInfo->beConstructedWith(['m.brzuchalski', 'ala-ma-kota!']);
         $this->toString()->shouldReturn('m.brzuchalski:ala-ma-kota!@localhost:80');
+        $this->__toString()->shouldReturn('m.brzuchalski:ala-ma-kota!@localhost:80');
+    }
+
+    function it_can_be_initialized_without_port(Host $host, UserInfo $userInfo)
+    {
+        $this->beConstructedWith($host, null, $userInfo);
     }
 }

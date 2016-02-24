@@ -8,11 +8,8 @@
 namespace Madkom\Uri;
 
 use InvalidArgumentException;
-use Madkom\Uri\Authority\Host\IPv4;
-use Madkom\Uri\Authority\Host\IPv6;
-use Madkom\Uri\Authority\Host\Name;
-use Madkom\Uri\Authority\UserInfo;
-use Madkom\Uri\Parser\Authority;
+use Madkom\Uri\Parser\Authority as AuthorityParser;
+use Madkom\Uri\Parser\Query as QueryParser;
 use Madkom\Uri\Scheme\Custom;
 use Madkom\Uri\Scheme\Http;
 use Madkom\Uri\Scheme\Https;
@@ -43,10 +40,13 @@ class Parser
         } else {
             throw new InvalidArgumentException("Malformed uri given, missing scheme in: {$uriString}");
         }
-        $authorityParser = new Authority();
+        $authorityParser = new AuthorityParser();
         $authority = $authorityParser->parse($iri->getAuthority());
+
         $path = Path::createFromString($iri->getPath());
-        $query = Query::createFromString($iri->getQuery());
+
+        $queryParser = new QueryParser();
+        $query = $queryParser->parse($iri->getQuery());
         $fragment = $iri->getFragment();
 
         return new Uri($scheme, $authority, $path, $query, $fragment);
