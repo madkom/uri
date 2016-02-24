@@ -1,0 +1,43 @@
+{
+    "name": "madkom/uri",
+    "description": "Uniform Resource Identifier (URI) and Uniform Resource Locator (URL)",
+    "type": "library",
+    "require": {
+        "php": "~7",
+        "madkom/collection": "@dev",
+        "rize/uri-template": "^0.3.0",
+        "league/url": "^3.3",
+        "true/punycode": "^2.0",
+        "ml/iri": "^1.1"
+    },
+    "require-dev": {
+        "henrikbjorn/phpspec-code-coverage": "@dev",
+        "phpunit/phpcov": "*",
+        "jakub-onderka/php-parallel-lint": "0.*",
+        "jakub-onderka/php-console-highlighter": "0.*",
+        "satooshi/php-coveralls": "dev-master",
+        "clover/dump": "dev-master",
+        "squizlabs/php_codesniffer": "^2.3",
+        "instaclick/object-calisthenics-sniffs": "@dev",
+        "phpspec/phpspec": "@dev",
+        "phpspec/prophecy": "dev-master",
+        "phpunit/phpunit": "5.*",
+        "mdarse/phpunit-notifier": "@dev",
+        "symfony/var-dumper": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Madkom\\Uri\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michał Brzuchalski",
+            "email": "m.brzuchalski@madkom.pl"
+        }
+    ],
+    "config": {
+        "bin-dir": "bin"
+    }
+}
