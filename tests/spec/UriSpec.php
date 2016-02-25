@@ -1,15 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace spec\Madkom\Uri;
 
-use Madkom\Uri\Authority;
-use Madkom\Uri\Authority\Host;
-use Madkom\Uri\NetworkScheme;
-use Madkom\Uri\Path;
-use Madkom\Uri\Query;
-use Madkom\Uri\Scheme;
+use Madkom\Uri\Component\Authority;
+use Madkom\Uri\Component\Authority\Host;
+use Madkom\Uri\Component\Path;
+use Madkom\Uri\Component\Query;
+use Madkom\Uri\Scheme\Scheme;
 use Madkom\Uri\Uri;
-use Madkom\Uri\Url;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -21,9 +19,12 @@ use Prophecy\Argument;
  */
 class UriSpec extends ObjectBehavior
 {
-    function let(Scheme $scheme, NetworkScheme $networkScheme, Authority $authority, Path $path, Query $query)
+    /** @var  Scheme */
+    private $scheme;
+
+    function let(Scheme $scheme, Authority $authority, Path $path, Query $query)
     {
-        $networkScheme->getScheme()->willReturn('http');
+        $this->scheme = $scheme;
         $this->beConstructedWith($scheme, $authority, $path, $query);
     }
 
@@ -52,16 +53,11 @@ class UriSpec extends ObjectBehavior
         $this->setQuery($query);
         $this->getQuery()->shouldReturn($query);
     }
-
-    function it_can_get_Url(NetworkScheme $networkScheme)
-    {
-        $this->setScheme($networkScheme);
-        $this->getUrl()->shouldReturnAnInstanceOf(Url::class);
-    }
-
+    
     function it_can_get_string_representation()
     {
+        $this->scheme->toString(Argument::type(Uri::class), 0)->willReturn('');
         $this->toString()->shouldBeString();
-        $this->__toString()->shouldBeString();
+//        $this->__toString()->shouldBeString();
     }
 }

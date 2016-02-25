@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: mbrzuchalski
@@ -7,16 +7,12 @@
  */
 namespace Madkom\Uri;
 
-use InvalidArgumentException;
-use Madkom\Uri\Authority\Host;
-use Madkom\Uri\Authority\Host\Name;
-use Madkom\Uri\Authority\Host\IPv4;
-use Madkom\Uri\Authority\Host\IPv6;
-use Madkom\Uri\Authority\UserInfo;
-use Madkom\Uri\Scheme\Http;
-use Madkom\Uri\Scheme\Https;
-use Madkom\Uri\Scheme\Custom;
-use ML\IRI\IRI;
+use Madkom\Uri\Component\Authority;
+use Madkom\Uri\Component\Authority\Host;
+use Madkom\Uri\Component\Fragment;
+use Madkom\Uri\Component\Path;
+use Madkom\Uri\Component\Query;
+use Madkom\Uri\Scheme\Scheme;
 
 /**
  * Class Uri
@@ -26,7 +22,7 @@ use ML\IRI\IRI;
 class Uri
 {
     /**
-     * @var Scheme|null Holds scheme component
+     * @var Scheme Holds scheme component
      */
     protected $scheme = null;
     /**
@@ -42,7 +38,7 @@ class Uri
      */
     protected $query = null;
     /**
-     * @var string|null Holds fragment component
+     * @var Fragment Holds fragment component
      */
     protected $fragment = null;
 
@@ -52,13 +48,15 @@ class Uri
      * @param Authority $authority
      * @param Path $path
      * @param Query $query
+     * @param Fragment $fragment
      */
-    public function __construct(Scheme $scheme, Authority $authority, Path $path, Query $query = null)
+    public function __construct(Scheme $scheme, Authority $authority, Path $path, Query $query = null, Fragment $fragment = null)
     {
         $this->scheme = $scheme;
         $this->authority = $authority;
         $this->path = $path;
         $this->query = $query;
+        $this->fragment = $fragment;
     }
 
     /**
@@ -98,24 +96,6 @@ class Uri
     }
 
     /**
-     * Retrieve query component
-     * @return Query
-     */
-    public function getQuery() : Query
-    {
-        return $this->query;
-    }
-
-    /**
-     * Sets query component
-     * @param Query $query
-     */
-    public function setQuery(Query $query)
-    {
-        $this->query = $query;
-    }
-
-    /**
      * Retrieve path info
      * @return Path
      */
@@ -134,21 +114,49 @@ class Uri
     }
 
     /**
-     * Retrieve url from uri
-     * @return Url
+     * Retrieve query component
+     * @return Query
      */
-    public function getUrl() : Url
+    public function getQuery() : Query
     {
-        return Url::createFromURI($this);
+        return $this->query;
+    }
+
+    /**
+     * Sets query component
+     * @param Query $query
+     */
+    public function setQuery(Query $query)
+    {
+        $this->query = $query;
+    }
+
+    /**
+     * Retrieves fragment component
+     * @return Fragment
+     */
+    public function getFragment() : Fragment
+    {
+        return $this->fragment;
+    }
+
+    /**
+     * Sets fragment component
+     * @param Fragment $fragment
+     */
+    public function setFragment(Fragment $fragment)
+    {
+        $this->fragment = $fragment;
     }
 
     /**
      * Retrieve uri string representation
+     * @param int $flags String conversion flags
      * @return string
      */
-    public function toString() : string
+    public function toString(int $flags = 0) : string
     {
-        return '';
+        return $this->scheme->toString($this, $flags);
     }
 
     /**

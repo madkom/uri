@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: mbrzuchalski
  * Date: 17.02.16
- * Time: 14:00
+ * Time: 14:28
  */
 namespace Madkom\Uri\Scheme;
 
@@ -14,13 +14,12 @@ use Madkom\Uri\Component\Query;
 use Madkom\Uri\Uri;
 
 /**
- * Class Http
- * @package Madkom\Uri\Scheme
+ * Interface Scheme
+ * @package Madkom\Uri
  * @author Michał Brzuchalski <m.brzuchalski@madkom.pl>
  */
-class Http implements Scheme
+interface Scheme
 {
-    const PROTOCOL = 'http';
     /**
      * Compose uri from parsed components
      * @param Authority $authority
@@ -29,19 +28,13 @@ class Http implements Scheme
      * @param Fragment $fragment
      * @return Uri
      */
-    public function compose(Authority $authority, Path $path, Query $query, Fragment $fragment) : Uri
-    {
-        return new Uri($this, $authority, $path, $query, $fragment);
-    }
+    public function compose(Authority $authority, Path $path, Query $query, Fragment $fragment) : Uri;
 
     /**
      * Retrieve uri string representation
-     * @param Uri $uri
-     * @param int $flags
+     * @param Uri $uri Uri to convert to string
+     * @param int $flags String conversion flags
      * @return string
      */
-    public function toString(Uri $uri, int $flags = 0) : string
-    {
-        return '';
-    }
+    public function toString(Uri $uri, int $flags = 0) : string;
 }

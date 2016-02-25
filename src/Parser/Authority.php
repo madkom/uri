@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: mbrzuchalski
@@ -8,10 +8,11 @@
 namespace Madkom\Uri\Parser;
 
 use InvalidArgumentException;
-use Madkom\Uri\Authority\Host\IPv4;
-use Madkom\Uri\Authority\Host\IPv6;
-use Madkom\Uri\Authority\Host\Name;
-use Madkom\Uri\Authority\UserInfo;
+use Madkom\Uri\Component\Authority as AuthorityComponent;
+use Madkom\Uri\Component\Authority\Host\IPv4;
+use Madkom\Uri\Component\Authority\Host\IPv6;
+use Madkom\Uri\Component\Authority\Host\Name;
+use Madkom\Uri\Component\Authority\UserInfo;
 
 /**
  * Class Authority
@@ -45,10 +46,10 @@ class Authority
     /**
      * Retrieve authority from string
      * @param string $authorityString
-     * @return \Madkom\Uri\Authority
+     * @return AuthorityComponent
      * @throws InvalidArgumentException On non-matching string
      */
-    public function parse(string $authorityString) : \Madkom\Uri\Authority
+    public function parse(string $authorityString) : AuthorityComponent
     {
         if (preg_match("/^" . self::AUTHORITY_REGEX . "$/", $authorityString, $match)) {
             if ($match['ipv4']) {
@@ -62,7 +63,7 @@ class Authority
                 $userInfo = new UserInfo($match['user'], $match['password']);
             }
 
-            return new \Madkom\Uri\Authority(
+            return new AuthorityComponent(
                 $host,
                 empty($match['port']) ? null : intval($match['port']),
                 $userInfo ?? null

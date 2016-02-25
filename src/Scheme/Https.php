@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: mbrzuchalski
@@ -7,31 +7,41 @@
  */
 namespace Madkom\Uri\Scheme;
 
-use Madkom\Uri\NetworkScheme;
+use Madkom\Uri\Component\Authority;
+use Madkom\Uri\Component\Fragment;
+use Madkom\Uri\Component\Path;
+use Madkom\Uri\Component\Query;
+use Madkom\Uri\Uri;
 
 /**
  * Class Https
  * @package Scheme
  * @author Michał Brzuchalski <m.brzuchalski@madkom.pl>
  */
-class Https implements NetworkScheme
+class Https implements Scheme
 {
     const PROTOCOL = 'https';
     /**
-     * Retrieve protocol name
-     * @return string
+     * Compose uri from parsed components
+     * @param Authority $authority
+     * @param Path $path
+     * @param Query $query
+     * @param Fragment $fragment
+     * @return Uri
      */
-    public function getScheme() : string
+    public function compose(Authority $authority, Path $path, Query $query, Fragment $fragment) : Uri
     {
-        return 'https';
+        return new Uri($this, $authority, $path, $query, $fragment);
     }
 
     /**
-     * Retrieve default port
-     * @return int
+     * Retrieve uri string representation
+     * @param Uri $uri
+     * @param int $flags
+     * @return string
      */
-    public function getPort() : int
+    public function toString(Uri $uri, int $flags = 0) : string
     {
-        return 443;
+        return '';
     }
 }

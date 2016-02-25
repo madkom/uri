@@ -1,12 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace spec\Madkom\Uri\Parser;
 
 use InvalidArgumentException;
-use Madkom\Uri\Authority\Host\IPv4;
-use Madkom\Uri\Authority\Host\IPv6;
-use Madkom\Uri\Authority\Host\Name;
-use Madkom\Uri\Authority\UserInfo;
+use Madkom\Uri\Component\Authority as AuthorityComponent;
+use Madkom\Uri\Component\Authority\Host\IPv4;
+use Madkom\Uri\Component\Authority\Host\IPv6;
+use Madkom\Uri\Component\Authority\Host\Name;
+use Madkom\Uri\Component\Authority\UserInfo;
 use Madkom\Uri\Parser\Authority;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -27,7 +28,7 @@ class AuthoritySpec extends ObjectBehavior
     function it_can_parse_various_authority_strings()
     {
         $withHostname = $this->parse('m.brzuchalski:ala-ma-kota!@madkom.pl');
-        $withHostname->shouldReturnAnInstanceOf(\Madkom\Uri\Authority::class);
+        $withHostname->shouldReturnAnInstanceOf(AuthorityComponent::class);
         $withHostname->getHost()->shouldReturnAnInstanceOf(Name::class);
         $withHostname->getPort()->shouldReturn(null);
         $withHostname->getUserInfo()->shouldReturnAnInstanceOf(UserInfo::class);
@@ -35,7 +36,7 @@ class AuthoritySpec extends ObjectBehavior
         $withHostname->getUserInfo()->getPassword()->shouldReturn('ala-ma-kota!');
 
         $withIPv4 = $this->parse('m.brzuchalski:ala-ma-kota!@254.127.17.1:9999');
-        $withIPv4->shouldReturnAnInstanceOf(\Madkom\Uri\Authority::class);
+        $withIPv4->shouldReturnAnInstanceOf(AuthorityComponent::class);
         $withIPv4->getHost()->shouldReturnAnInstanceOf(IPv4::class);
         $withIPv4->getPort()->shouldReturn(9999);
         $withIPv4->getUserInfo()->shouldReturnAnInstanceOf(UserInfo::class);
@@ -43,7 +44,7 @@ class AuthoritySpec extends ObjectBehavior
         $withIPv4->getUserInfo()->getPassword()->shouldReturn('ala-ma-kota!');
 
         $withIPv6 = $this->parse('m.brzuchalski:ala-ma-kota!@[::1]:9999');
-        $withIPv6->shouldReturnAnInstanceOf(\Madkom\Uri\Authority::class);
+        $withIPv6->shouldReturnAnInstanceOf(AuthorityComponent::class);
         $withIPv6->getHost()->shouldReturnAnInstanceOf(IPv6::class);
         $withIPv6->getPort()->shouldReturn(9999);
         $withIPv6->getUserInfo()->shouldReturnAnInstanceOf(UserInfo::class);

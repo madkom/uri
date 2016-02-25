@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace spec\Madkom\Uri\Scheme;
 
@@ -17,11 +17,5 @@ class HttpSpec extends ObjectBehavior
     function it_is_initializable()
     {
         $this->shouldHaveType(Http::class);
-    }
-
-    function it_can_get_scheme_and_port()
-    {
-        $this->getScheme()->shouldReturn('http');
-        $this->getPort()->shouldReturn(80);
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: mbrzuchalski
@@ -7,7 +7,8 @@
  */
 namespace Madkom\Uri\Parser;
 
-use Madkom\Uri\Query\Parameter;
+use Madkom\Uri\Component\Query as QueryComponent;
+use Madkom\Uri\Component\Query\Parameter;
 use UnexpectedValueException;
 
 /**
@@ -26,11 +27,11 @@ class Query
      * Parse query string into query
      * @param string $queryString String with query to parse
      * @param int $mode Parse mode {@see self::DUPLICATE_LAST}
-     * @return \Madkom\Uri\Query
+     * @return QueryComponent
      */
-    public function parse(string $queryString, int $mode = 1) : \Madkom\Uri\Query
+    public function parse(string $queryString, int $mode = 1) : QueryComponent
     {
-        $query = new \Madkom\Uri\Query();
+        $query = new QueryComponent();
         switch ($mode) {
             case self::DUPLICATE_LAST:
                 parse_str($queryString, $parameters);

@@ -1,9 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace spec\Madkom\Uri\Parser;
 
 use Madkom\Uri\Parser\Query;
-use Madkom\Uri\Query as QueryComponent;
+use Madkom\Uri\Component\Query as QueryComponent;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use UnexpectedValueException;
