@@ -25,7 +25,7 @@ Parsing url string:
 
 ```php
 $parser = new \Madkom\Uri\Parser();
-$uri = $parser->parse('http://user:pass@host.tld/some/path?and=query&param=2#fragment'); // Instance of \Madkom\Uri\Uri
+$uri = $parser->parse('http://user:pass@host.tld/some/path?and=query&param=2#fragment');
 $uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Http
 $uri->getAuthority(); // Instance of \Madkom\Uri\Authority
 $uri->getPath(); // Instance of \Madkom\Uri\Path
@@ -63,7 +63,19 @@ $uri = new \Madkom\Uri\Uri(
         new \Madkom\Uri\Query\Parameter('name', 'value')
     ])
 );
+
+$uri->toString(); // https://user:pass@[::1]:443/some/path?name=value
+(string)$uri; // same as above
 ```
+
+## TODO
+
+[ ] Implement Uri to string conversion
+[ ] Implement fragment component
+[ ] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
+[ ] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
+[ ] Implement normalization
+[ ] Implement UriReference based on *RFC3986*
 
 ## License
 
