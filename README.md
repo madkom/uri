@@ -27,8 +27,8 @@ This library requires *PHP* in `~7` version.
 At this point this library depends on another own library `madkom/collection` and some external packages:
  
 1. [rize/uri-template](https://packagist.org/packages/rize/uri-template): for UriTemplate impl
-2. [true/punycode]: for IDNA domain names conversion
-3. [ml/iri]: for parsing URI _(this will be replaced with own impl because od to many dependencies and not as much RFC compliant impl)_
+2. [true/punycode](https://packagist.org/packages/true/punycode): for IDNA domain names conversion
+3. [ml/iri](https://packagist.org/packages/ml/iri): for parsing URI _(this will be replaced with own impl because od to many dependencies and not as much RFC compliant impl)_
 
 ## Usage
 
