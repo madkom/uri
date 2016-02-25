@@ -2,7 +2,9 @@
 
 namespace spec\Madkom\Uri;
 
+use InvalidArgumentException;
 use Madkom\Uri\Authority;
+use Madkom\Uri\NetworkScheme;
 use Madkom\Uri\Path;
 use Madkom\Uri\Query;
 use Madkom\Uri\Scheme;
@@ -19,8 +21,9 @@ use Prophecy\Argument;
  */
 class UrlSpec extends ObjectBehavior
 {
-    function let(Scheme $scheme, Authority $authority, Path $path, Query $query, Uri $uri)
+    function let(NetworkScheme $scheme, Authority $authority, Path $path, Query $query, Uri $uri)
     {
+        $scheme->getScheme()->willReturn('http');
         $uri->getScheme()->willReturn($scheme);
         $uri->getAuthority()->willReturn($authority);
         $uri->getPath()->willReturn($path);
@@ -36,5 +39,11 @@ class UrlSpec extends ObjectBehavior
     function it_can_be_created_from_Uri(Uri $uri)
     {
         $this::createFromURI($uri)->shouldReturnAnInstanceOf(Url::class);
+    }
+
+    function it_fails_on_non_network_scheme_creation_from_Uri(Uri $uri)
+    {
+        $uri->getScheme()->willReturn(new Scheme\Custom('isbn'));
+        $this->shouldThrow(InvalidArgumentException::class)->during('createFromURI', [$uri]);
     }
 }

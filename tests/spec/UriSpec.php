@@ -4,6 +4,7 @@ namespace spec\Madkom\Uri;
 
 use Madkom\Uri\Authority;
 use Madkom\Uri\Authority\Host;
+use Madkom\Uri\NetworkScheme;
 use Madkom\Uri\Path;
 use Madkom\Uri\Query;
 use Madkom\Uri\Scheme;
@@ -20,8 +21,9 @@ use Prophecy\Argument;
  */
 class UriSpec extends ObjectBehavior
 {
-    function let(Scheme $scheme, Authority $authority, Path $path, Query $query)
+    function let(Scheme $scheme, NetworkScheme $networkScheme, Authority $authority, Path $path, Query $query)
     {
+        $networkScheme->getScheme()->willReturn('http');
         $this->beConstructedWith($scheme, $authority, $path, $query);
     }
 
@@ -51,8 +53,9 @@ class UriSpec extends ObjectBehavior
         $this->getQuery()->shouldReturn($query);
     }
 
-    function it_can_get_Url()
+    function it_can_get_Url(NetworkScheme $networkScheme)
     {
+        $this->setScheme($networkScheme);
         $this->getUrl()->shouldReturnAnInstanceOf(Url::class);
     }
 

@@ -24,12 +24,11 @@ class Url extends Uri
      */
     public static function createFromURI(Uri $uri)
     {
-        if ($uri->scheme instanceof Scheme &&
-            !($uri->scheme instanceof NetworkScheme) &&
-            !($uri->authority instanceof Authority)
+        if ($uri->getScheme() instanceof Scheme &&
+            (!($uri->getScheme() instanceof NetworkScheme) || !($uri->getAuthority() instanceof Authority))
         ) {
             throw new InvalidArgumentException(
-                "Unable to convert URI({$uri->scheme->getScheme()}) to URL, missing authority or invalid scheme"
+                "Unable to convert URI({$uri->getScheme()->getScheme()}) to URL, missing authority or invalid scheme"
             );
         }
         $reflection = new ReflectionClass(self::class);
