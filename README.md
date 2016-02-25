@@ -4,6 +4,7 @@ Uniform Resource Identifier (URI) and Uniform Resource Locator (URL)
 This library implements URI and URL specification, based on Java impl and partially on 
 [RFC3986](https://tools.ietf.org/html/rfc3986). 
 
+![PHP 7.0](https://img.shields.io/badge/PHP-7.0-8C9CB6.svg?style=flat)
 [![Build Status](https://travis-ci.org/madkom/uri.svg?branch=master)](https://travis-ci.org/madkom/uri)
 [![Latest Stable Version](https://poser.pugx.org/madkom/uri/v/stable)](https://packagist.org/packages/madkom/uri)
 [![Total Downloads](https://poser.pugx.org/madkom/uri/downloads)](https://packagist.org/packages/madkom/uri)
