@@ -6,7 +6,6 @@
         "php": "~7",
         "madkom/collection": "@dev",
         "rize/uri-template": "^0.3.0",
-        "league/url": "^3.3",
         "true/punycode": "^2.0",
         "ml/iri": "^1.1"
     },
