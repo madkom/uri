@@ -70,12 +70,12 @@ $uri->toString(); // https://user:pass@[::1]:443/some/path?name=value
 
 ## TODO
 
-[ ] Implement Uri to string conversion
-[ ] Implement fragment component
-[ ] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
-[ ] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
-[ ] Implement normalization
-[ ] Implement UriReference based on *RFC3986*
+* [ ] Implement Uri to string conversion
+* [ ] Implement fragment component
+* [ ] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
+* [ ] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
+* [ ] Implement normalization
+* [ ] Implement UriReference based on *RFC3986*
 
 ## License
 
