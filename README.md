@@ -8,6 +8,7 @@ This library implements URI and URL specification, based on Java impl and partia
 [![Latest Stable Version](https://poser.pugx.org/madkom/uri/v/stable)](https://packagist.org/packages/madkom/uri)
 [![Total Downloads](https://poser.pugx.org/madkom/uri/downloads)](https://packagist.org/packages/madkom/uri)
 [![License](https://poser.pugx.org/madkom/uri/license)](https://packagist.org/packages/madkom/uri)
+[![Coverage Status](https://coveralls.io/repos/github/madkom/uri/badge.svg?branch=master)](https://coveralls.io/github/madkom/uri?branch=master)
 
 ---
 
@@ -24,8 +25,14 @@ composer require madkom/uri
 Parsing url string:
 
 ```php
-$parser = new \Madkom\Uri\Parser();
+use Madkom\Uri\Parser;
+use Madkom\Uri\Uri;
+
+$parser = new Parser();
+
+/** @var Uri $uri */
 $uri = $parser->parse('http://user:pass@host.tld/some/path?and=query&param=2#fragment');
+
 $uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Http
 $uri->getAuthority(); // Instance of \Madkom\Uri\Authority
 $uri->getPath(); // Instance of \Madkom\Uri\Path
@@ -37,8 +44,14 @@ $uri->getQuery(); // Instance of \Madkom\Uri\Query
 Parsing isbn uri:
 
 ```php
-$parser = new \Madkom\Uri\Parser();
+use Madkom\Uri\Parser;
+use Madkom\Uri\Uri;
+
+$parser = new Parser();
+
+/** @var Uri $uri */
 $uri = $parser->parse('isbn:978-83-283-0525-0'); // Instance of \Madkom\Uri\Uri
+
 $uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Custom
 $uri->getAuthority(); // NULL
 $uri->getPath(); // Instance of \Madkom\Uri\Path with "978-83-283-0525-0"
@@ -48,19 +61,29 @@ $uri->getQuery(); // Instance of \Madkom\Uri\Query which is empty
 Creating URI object:
 
 ```php
-$uri = new \Madkom\Uri\Uri(
-    new \Madkom\Uri\Scheme\Https(),
-    new \Madkom\Uri\Authority(
-        new \Madkom\Uri\Host\IPv6('::1'),
+use Madkom\Uri\Uri;
+use Madkom\Uri\Scheme\Https;
+use Madkom\Uri\Authority;
+use Madkom\Uri\Authority\Host\IPv6;
+use Madkom\Uri\Authority\UserInfo;
+use Madkom\Uri\Path;
+use Madkom\Uri\Query;
+use Madkom\Uri\Query\Parameter;
+
+/** @var Uri $uri */
+$uri = new Uri(
+    new Https(),
+    new Authority(
+        new IPv6('::1'),
         443,
-        new \Madkom\Uri\Authority\UserInfo('user', 'pass')
+        new UserInfo('user', 'pass')
     ),
-    new \Madkom\Uri\Path([
+    new Path([
         'some',
         'path'
     ]),
-    new \Madkom\Uri\Query([
-        new \Madkom\Uri\Query\Parameter('name', 'value')
+    new Query([
+        new Parameter('name', 'value')
     ])
 );
 
