@@ -19,7 +19,7 @@ class Path
     const DELIMITER = '/';
     const PATH_REGEX = "/^([^\\/?#]*)$/";
     /**
-     * @var string Holds path segments
+     * @var array Holds path segments
      */
     protected $segments = [];
 

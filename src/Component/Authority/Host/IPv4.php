@@ -43,7 +43,6 @@ class IPv4 implements Host
     /**
      * Sets IPv4 address if valid
      * @param string $address IPv4 address to set
-     * @return boolean
      * @throws InvalidArgumentException
      */
     protected function setAddress(string $address)
