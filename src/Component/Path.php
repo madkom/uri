@@ -22,17 +22,23 @@ class Path
      * @var array Holds path segments
      */
     protected $segments = [];
+    /**
+     * @var bool Holds relativity info
+     */
+    private $absolute;
 
     /**
      * Path constructor.
      * @param array $elements
+     * @param bool $absolute
      */
-    public function __construct(array $elements = [])
+    public function __construct(array $elements = [], bool $absolute = true)
     {
         if (false === $this->isValid($elements)) {
             throw new InvalidArgumentException("Malformed path segments");
         }
         $this->segments = $elements;
+        $this->absolute = $absolute;
     }
 
     /**
@@ -50,7 +56,32 @@ class Path
 
         return true;
     }
-    
+
+    /**
+     * Checks if path is absolute (starting with "/")
+     * @return bool
+     */
+    public function isAbsolute() : bool
+    {
+        return $this->absolute;
+    }
+
+    /**
+     * Sets as absolute
+     */
+    public function setAbsolute()
+    {
+        $this->absolute = true;
+    }
+
+    /**
+     * Sets as relative
+     */
+    public function setRelative()
+    {
+        $this->absolute = false;
+    }
+
     /**
      * Retrieve path segments
      * @return array
@@ -61,12 +92,47 @@ class Path
     }
 
     /**
+     * Removes dot segments and returns new instance of Path
+     * @return Path
+     */
+    public function removeDotSegments() : Path
+    {
+        $result = clone $this;
+        foreach ($result->segments as $index => $segment) {
+            if ($segment == '.') {
+                unset($result->segments[$index]);
+            }
+            if ($segment == '..' && $index > 0) {
+                unset($result->segments[$index]);
+                unset($result->segments[$index - 1]);
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Merges two Paths
+     * @param Path $path
+     * @return Path
+     */
+    public function merge(Path $path) : Path
+    {
+        $segments = array_merge(
+            $this->segments,
+            $path->segments
+        );
+
+        return new Path($segments, $this->absolute);
+    }
+
+    /**
      * Retrieve path as string
      * @return string
      */
     public function toString() : string
     {
-        return self::DELIMITER . implode(self::DELIMITER, array_map('urlencode', $this->segments));
+        return ($this->absolute ? self::DELIMITER : "") . implode(self::DELIMITER, array_map('urlencode', $this->segments));
     }
 
     /**

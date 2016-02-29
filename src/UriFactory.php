@@ -115,6 +115,7 @@ class UriFactory
      * @param string $uriString
      * @param Scheme $defaultScheme
      * @return Uri
+     * @throws MalformedAuthorityParseUriException When authority string is malformed
      * @throws MissingSchemeParseUriException When scheme missing in uri string
      * @throws ParseUriException When unable to match uri regex
      */
@@ -123,10 +124,7 @@ class UriFactory
         if (preg_match("/" . self::URI_REGEXP . "/", $uriString, $matches)) {
             $scheme = $defaultScheme;
             if ($matches['scheme']) {
-                if (array_key_exists($matches['scheme'], self::$schemes)) {
-                    $schemeName = self::$schemes[$matches['scheme']];
-                    $scheme = new $schemeName();
-                }
+                $scheme = $this->parseScheme($matches['scheme']);
             }
             if (null === $scheme) {
                 throw new MissingSchemeParseUriException("Malformed uri string, invalid scheme given: {$uriString}");
@@ -146,6 +144,56 @@ class UriFactory
         }
 
         throw new ParseUriException("Malformed uri string, unable to parse, given: {$uriString}");
+    }
+
+    /**
+     * Create new UriReference from string
+     * @param string $uriReferenceString
+     * @return UriReference
+     * @throws MalformedAuthorityParseUriException When authority string is malformed
+     * @throws MissingSchemeParseUriException When scheme missing in uri string
+     * @throws ParseUriException When unable to match uri regex
+     */
+    public function createUriReference(string $uriReferenceString) : UriReference
+    {
+        if (preg_match("/" . self::URI_REGEXP . "/", $uriReferenceString, $matches)) {
+            if (array_key_exists('scheme', $matches) && !empty($matches['scheme'])) {
+                $scheme = $this->parseScheme($matches['scheme']);
+            }
+            if (array_key_exists('authority', $matches) && !empty($matches['authority'])) {
+                $authority = $this->parseAuthority($matches['authority']);
+            }
+            if (array_key_exists('path', $matches) && !empty($matches['path'])) {
+                $path = $this->parsePath($matches['path']);
+            }
+            if (array_key_exists('query', $matches) && !empty($matches['query'])) {
+                $query = $this->parseQuery($matches['query'], $this->mode);
+            }
+            if (array_key_exists('fragment', $matches) && !empty($matches['fragment'])) {
+                $fragment = new Fragment($matches['fragment']);
+            }
+
+            return new UriReference($scheme ?? null, $authority ?? null, $path ?? null, $query ?? null, $fragment ?? null);
+        }
+
+        throw new ParseUriException("Malformed uri reference string, unable to parse, given: {$uriReferenceString}");
+    }
+
+    /**
+     * Parse scheme string into Scheme
+     * @param string $schemeString
+     * @return Scheme
+     * @throws MissingSchemeParseUriException
+     */
+    protected function parseScheme(string $schemeString) : Scheme
+    {
+        if (array_key_exists($schemeString, self::$schemes)) {
+            $schemeClassName = self::$schemes[$schemeString];
+
+            return new $schemeClassName();
+        }
+
+        throw new MissingSchemeParseUriException("Unsupported scheme, given: {$schemeString}");
     }
 
     /**
@@ -183,7 +231,7 @@ class UriFactory
     {
         $segments = explode(self::PATH_DELIMITER, ltrim($pathString, self::PATH_DELIMITER));
 
-        return new Path($segments);
+        return new Path($segments, strpos($pathString, self::PATH_DELIMITER) === 0);
     }
 
     /**

@@ -36,11 +36,11 @@ class Uri
     /**
      * @var Query Holds query component
      */
-    protected $query = null;
+    protected $query;
     /**
      * @var Fragment Holds fragment component
      */
-    protected $fragment = null;
+    protected $fragment;
 
     /**
      * Uri constructor.
@@ -54,9 +54,9 @@ class Uri
     {
         $this->scheme = $scheme;
         $this->authority = $authority;
-        $this->path = $path;
-        $this->query = $query;
-        $this->fragment = $fragment;
+        $this->path = $path ?? new Path();
+        $this->query = $query ?? new Query();
+        $this->fragment = $fragment ?? new Fragment();
     }
 
     /**
@@ -150,13 +150,28 @@ class Uri
     }
 
     /**
-     * Retrieve uri string representation
+     * Retrieve uri string representation according to RFC 3986 at 5.3. Component Recomposition
+     * @url https://tools.ietf.org/html/rfc3986#section-5.3
      * @param int $flags String conversion flags
      * @return string
      */
     public function toString(int $flags = 0) : string
     {
-        return $this->scheme->toString($this, $flags);
+        $result = '';
+        if ($this->scheme) {
+            $result .= $this->scheme->toString($this) . ":";
+        }
+        if (null !== $this->authority) {
+            $result .= "//" . $this->authority->toString();
+        }
+        $result .= $this->path->toString();
+        if (null !== $this->query && count($this->query) > 0) {
+            $result .= "?" . $this->query->toString();
+        }
+        if (null !== $this->fragment && !empty($this->fragment->getFragment())) {
+            $result .= "#" . $this->fragment->toString();
+        }
+        return $result;
     }
 
     /**
