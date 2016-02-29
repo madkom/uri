@@ -50,7 +50,7 @@ class Uri
      * @param Query $query
      * @param Fragment $fragment
      */
-    public function __construct(Scheme $scheme, Authority $authority, Path $path, Query $query = null, Fragment $fragment = null)
+    public function __construct(Scheme $scheme, Authority $authority = null, Path $path = null, Query $query = null, Fragment $fragment = null)
     {
         $this->scheme = $scheme;
         $this->authority = $authority;

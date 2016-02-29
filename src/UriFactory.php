@@ -21,6 +21,7 @@ use Madkom\Uri\Exception\MissingSchemeParseUriException;
 use Madkom\Uri\Exception\ParseUriException;
 use Madkom\Uri\Scheme\Http;
 use Madkom\Uri\Scheme\Https;
+use Madkom\Uri\Scheme\Isbn;
 use Madkom\Uri\Scheme\Scheme;
 use UnexpectedValueException;
 
@@ -101,6 +102,7 @@ class UriFactory
     protected static $schemes = [
         Http::PROTOCOL => Http::class,
         Https::PROTOCOL => Https::class,
+        Isbn::PROTOCOL => Isbn::class,
     ];
 
     /**
@@ -127,17 +129,23 @@ class UriFactory
                 }
             }
             if (null === $scheme) {
-                throw new MissingSchemeParseUriException("Malformed uri string given, missing scheme in: {$uriString}");
+                throw new MissingSchemeParseUriException("Malformed uri string, invalid scheme given: {$uriString}");
             }
-            $authority = $this->parseAuthority($matches['authority']);
+            if (array_key_exists('authority', $matches) && $matches['authority']) {
+                $authority = $this->parseAuthority($matches['authority']);
+            }
             $path = $this->parsePath($matches['path']);
-            $query = $this->parseQuery($matches['query'], $this->mode);
-            $fragment = new Fragment($matches['fragment']);
+            if (array_key_exists('query', $matches) && $matches['query']) {
+                $query = $this->parseQuery($matches['query'], $this->mode);
+            }
+            if (array_key_exists('fragment', $matches) && $matches['fragment']) {
+                $fragment = new Fragment($matches['fragment']);
+            }
 
-            return new Uri($scheme, $authority, $path, $query, $fragment);
+            return new Uri($scheme, $authority ?? null, $path, $query ?? null, $fragment ?? null);
         }
 
-        throw new ParseUriException("Malformed uri string, unabel to parse, given: {$uriString}");
+        throw new ParseUriException("Malformed uri string, unable to parse, given: {$uriString}");
     }
 
     /**

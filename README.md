@@ -30,20 +30,19 @@ At this point this library depends on another own library [madkom/collection](ht
  
 1. [rize/uri-template](https://packagist.org/packages/rize/uri-template): for UriTemplate impl
 2. [true/punycode](https://packagist.org/packages/true/punycode): for IDNA domain names conversion
-3. [ml/iri](https://packagist.org/packages/ml/iri): for parsing URI _(this will be replaced with own impl because od to many dependencies and not as much RFC compliant impl)_
 
 ## Usage
 
 Parsing url string:
 
 ```php
-use Madkom\Uri\Parser;
+use Madkom\Uri\UriFactory;
 use Madkom\Uri\Uri;
 
-$parser = new Parser();
+$factory = new UriFactory();
 
 /** @var Uri $uri */
-$uri = $parser->parse('http://user:pass@host.tld/some/path?and=query&param=2#fragment');
+$uri = $factory->createUri('http://user:pass@host.tld/some/path?and=query&param=2#fragment');
 
 $uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Http
 $uri->getAuthority(); // Instance of \Madkom\Uri\Authority
@@ -56,13 +55,13 @@ $uri->getQuery(); // Instance of \Madkom\Uri\Query
 Parsing isbn uri:
 
 ```php
-use Madkom\Uri\Parser;
+use Madkom\Uri\UriFactory;
 use Madkom\Uri\Uri;
 
-$parser = new Parser();
+$factory = new UriFactory();
 
 /** @var Uri $uri */
-$uri = $parser->parse('isbn:978-83-283-0525-0'); // Instance of \Madkom\Uri\Uri
+$uri = $factory->createUri('isbn:978-83-283-0525-0'); // Instance of \Madkom\Uri\Uri
 
 $uri->getScheme(); // Instance of \Madkom\Uri\Scheme\Custom
 $uri->getAuthority(); // NULL
@@ -106,9 +105,9 @@ $uri->toString(); // https://user:pass@[::1]:443/some/path?name=value
 ## TODO
 
 * [ ] Implement Uri to string conversion
-* [ ] Implement fragment component
-* [ ] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
-* [ ] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
+* [x] Implement fragment component
+* [x] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
+* [x] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
 * [ ] Implement normalization
 * [ ] Implement UriReference based on *RFC3986*
 

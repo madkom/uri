@@ -29,6 +29,6 @@ class UriFactorySpec extends ObjectBehavior
 
     function it_fails_on_scheme_missing()
     {
-        $this->shouldThrow(MissingSchemeParseUriException::class)->during('create', ['//user:pass@madkom.pl/path/to']);
+        $this->shouldThrow(MissingSchemeParseUriException::class)->during('createUri', ['//user:pass@madkom.pl/path/to']);
     }
 }
