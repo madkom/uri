@@ -52,6 +52,23 @@ $uri->getQuery(); // Instance of \Madkom\Uri\Query
 
 > **TODO** Missing fragment impl yet.
 
+Parsing and resolving UriReference:
+
+```php
+use Madkom\Uri\UriFactory;
+use Madkom\Uri\Uri;
+use Madkom\Uri\UriReference;
+
+$factory = new UriFactory();
+
+/** @var Uri $uri */
+$uri = $factory->createUri('http://user:pass@host.tld/some/path?and=query&param=2#fragment');
+
+/** @var UriReference $uriReference */
+$uriReference = $factory->createUriReference('../another/path?and=different');
+(string)$uriReference->resolveUri($uri); // http://user:pass@host.tld/some/another/path?and=different
+```
+
 Parsing isbn uri:
 
 ```php
