@@ -7,12 +7,6 @@
  */
 namespace Madkom\Uri\Scheme;
 
-use Madkom\Uri\Component\Authority;
-use Madkom\Uri\Component\Fragment;
-use Madkom\Uri\Component\Path;
-use Madkom\Uri\Component\Query;
-use Madkom\Uri\Uri;
-
 /**
  * Interface Scheme
  * @package Madkom\Uri
@@ -21,20 +15,32 @@ use Madkom\Uri\Uri;
 interface Scheme
 {
     /**
-     * Compose uri from parsed components
-     * @param Authority $authority
-     * @param Path $path
-     * @param Query $query
-     * @param Fragment $fragment
-     * @return Uri
+     * Checks if scheme handles Authority
+     * @return bool
      */
-    public function compose(Authority $authority, Path $path, Query $query, Fragment $fragment) : Uri;
+    public function canHandleAuthority() : bool;
+
+    /**
+     * Checks if scheme handles Path
+     * @return bool
+     */
+    public function canHandlePath() : bool;
+
+    /**
+     * Checks if scheme handles Query
+     * @return bool
+     */
+    public function canHandleQuery() : bool;
+
+    /**
+     * Checks if scheme handles Fragment
+     * @return bool
+     */
+    public function canHandleFragment() : bool;
 
     /**
      * Retrieve uri string representation
-     * @param Uri $uri Uri to convert to string
-     * @param int $flags String conversion flags
      * @return string
      */
-    public function toString(Uri $uri, int $flags = 0) : string;
+    public function toString() : string;
 }

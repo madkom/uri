@@ -159,19 +159,22 @@ class Uri
     {
         $result = '';
         if ($this->scheme) {
-            $result .= $this->scheme->toString($this) . ":";
+            $result .= $this->scheme->toString() . ":";
         }
-        if (null !== $this->authority) {
+        if ($this->scheme->canHandleAuthority() && (null !== $this->authority)) {
             $result .= "//" . $this->authority->toString();
         }
-        $result .= $this->path->toString();
-        if (null !== $this->query && count($this->query) > 0) {
+        if ($this->scheme->canHandlePath()) {
+            $result .= $this->path->toString();
+        }
+        if ($this->scheme->canHandleQuery() && count($this->query) > 0) {
             $result .= "?" . $this->query->toString();
         }
-        if (null !== $this->fragment && !empty($this->fragment->getFragment())) {
+        if ($this->scheme->canHandleFragment() && !empty($this->fragment->getFragment())) {
             $result .= "#" . $this->fragment->toString();
         }
-        return $result;
+
+        return (string)$result;
     }
 
     /**

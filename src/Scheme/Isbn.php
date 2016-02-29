@@ -7,12 +7,6 @@
  */
 namespace Madkom\Uri\Scheme;
 
-use Madkom\Uri\Component\Authority;
-use Madkom\Uri\Component\Fragment;
-use Madkom\Uri\Component\Path;
-use Madkom\Uri\Component\Query;
-use Madkom\Uri\Uri;
-
 /**
  * Class Isbn
  * @package Madkom\Uri\Scheme
@@ -21,27 +15,49 @@ use Madkom\Uri\Uri;
 class Isbn implements Scheme
 {
     const PROTOCOL = 'isbn';
+
     /**
-     * Compose uri from parsed components
-     * @param Authority $authority
-     * @param Path $path
-     * @param Query $query
-     * @param Fragment $fragment
-     * @return Uri
+     * Checks if scheme handles Authority
+     * @return bool
      */
-    public function compose(Authority $authority, Path $path, Query $query, Fragment $fragment) : Uri
+    public function canHandleAuthority() : bool
     {
-        return new Uri($this, null, $path);
+        return false;
+    }
+
+    /**
+     * Checks if scheme handles Path
+     * @return bool
+     */
+    public function canHandlePath() : bool
+    {
+        return true;
+    }
+
+    /**
+     * Checks if scheme handles Query
+     * @return bool
+     */
+    public function canHandleQuery() : bool
+    {
+        return false;
+    }
+
+    /**
+     * Checks if scheme handles Fragment
+     * @return bool
+     */
+    public function canHandleFragment() : bool
+    {
+        return false;
     }
 
     /**
      * Retrieve uri string representation
-     * @param Uri $uri
-     * @param int $flags
      * @return string
      */
-    public function toString(Uri $uri, int $flags = 0) : string
+    public function toString() : string
     {
-        return '';
+        return self::PROTOCOL;
     }
 }

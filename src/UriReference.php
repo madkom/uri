@@ -79,4 +79,26 @@ class UriReference extends Uri
 
         return $result;
     }
+
+    public function toString(int $flags = 0) : string
+    {
+        $result = '';
+        if ($this->scheme) {
+            $result .= $this->scheme->toString() . ":";
+        }
+        if ((null === $this->scheme || $this->scheme->canHandleAuthority()) && (null !== $this->authority)) {
+            $result .= "//" . $this->authority->toString();
+        }
+        if ((null === $this->scheme || $this->scheme->canHandlePath())) {
+            $result .= $this->path->toString();
+        }
+        if ((null === $this->scheme || $this->scheme->canHandleQuery()) && count($this->query) > 0) {
+            $result .= "?" . $this->query->toString();
+        }
+        if ((null === $this->scheme || $this->scheme->canHandleFragment()) && !empty($this->fragment->getFragment())) {
+            $result .= "#" . $this->fragment->toString();
+        }
+
+        return (string)$result;
+    }
 }

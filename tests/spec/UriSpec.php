@@ -19,12 +19,21 @@ use Prophecy\Argument;
  */
 class UriSpec extends ObjectBehavior
 {
-    /** @var  Scheme */
-    private $scheme;
-
     function let(Scheme $scheme, Authority $authority, Path $path, Query $query)
     {
-        $this->scheme = $scheme;
+        $scheme->toString()->willReturn('scheme');
+        $scheme->canHandleAuthority()->willReturn(true);
+        $scheme->canHandlePath()->willReturn(true);
+        $scheme->canHandleQuery()->willReturn(true);
+        $scheme->canHandleFragment()->willReturn(true);
+
+        $authority->toString()->willReturn('authority');
+
+        $path->toString()->willReturn('/path');
+
+        $query->toString()->willReturn('query=string');
+        $query->count()->willReturn(1);
+
         $this->beConstructedWith($scheme, $authority, $path, $query);
     }
 
@@ -56,8 +65,7 @@ class UriSpec extends ObjectBehavior
     
     function it_can_get_string_representation()
     {
-        $this->scheme->toString(Argument::type(Uri::class), 0)->willReturn('');
-        $this->toString()->shouldBeString();
-//        $this->__toString()->shouldBeString();
+        $this->toString();
+        $this->__toString()->shouldBeString();
     }
 }
