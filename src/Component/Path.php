@@ -50,17 +50,7 @@ class Path
 
         return true;
     }
-
-    /**
-     * Custom constructor from string
-     * @param string $path
-     * @return Path
-     */
-    public static function createFromString(string $path) : self
-    {
-        return new self(explode(self::DELIMITER, ltrim($path, self::DELIMITER)));
-    }
-
+    
     /**
      * Retrieve path segments
      * @return array

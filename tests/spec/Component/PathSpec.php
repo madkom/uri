@@ -48,11 +48,4 @@ class PathSpec extends ObjectBehavior
         $this->shouldThrow(InvalidArgumentException::class)->during('__construct', [['a?2']]);
         $this->shouldThrow(InvalidArgumentException::class)->during('__construct', [['a/2']]);
     }
-
-    function it_can_construct_from_string()
-    {
-        $self = self::createFromString('/a/b/c');
-        $self->shouldReturnAnInstanceOf(Path::class);
-        $self->getSegments()->shouldReturn(['a', 'b', 'c']);
-    }
 }
