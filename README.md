@@ -17,11 +17,11 @@ and [RFC6570](https://tools.ietf.org/html/rfc6570) _(depends on external lib)_.
 
 ## Features
 
-This library can:
+This library can create objects like:
 
-* Parse URI [RFC3986](https://tools.ietf.org/html/rfc3986) into **Uri** object which includes wide abstraction with: **Scheme**, **Authority**, **Path**, **Query**, **Fragment** objects
-* Parse URIReference [RFC3986](https://tools.ietf.org/html/rfc3986) into **UriReference** object which can be resolved with valid **Uri** _(eg. `$resolvedUri = $uriReference->resolve($uri);`)_
-* Parse URITemplate [RFC6570](https://tools.ietf.org/html/rfc6570) into **UriTemplate** object which produces **Uri** or **UriReference** objects _(depends on template)_
+* **Uri** [RFC3986](https://tools.ietf.org/html/rfc3986) - includes wide abstraction with: **Scheme**, **Authority**, **Path**, **Query**, **Fragment**
+* **UriReference** [RFC3986](https://tools.ietf.org/html/rfc3986) - can be resolved with valid **Uri** _(eg. `$resolvedUri = $uriReference->resolve($uri);`)_
+* **UriTemplate** [RFC6570](https://tools.ietf.org/html/rfc6570) - produces **Uri** or **UriReference** objects _(depends on template)_
 
 
 ## Installation
