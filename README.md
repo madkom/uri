@@ -121,12 +121,12 @@ $uri->toString(); // https://user:pass@[::1]:443/some/path?name=value
 
 ## TODO
 
-* [ ] Implement Uri to string conversion
+* [x] Implement Uri to string conversion
 * [x] Implement fragment component
 * [x] Replace IRI library with RFC Regex in `\Madkom\Uri\Parser`
 * [x] Implement additional parsing modes in `\Madkom\Uri\Parser\Query` for various languages _(parameter duplicate problem)_
 * [ ] Implement normalization
-* [ ] Implement UriReference based on *RFC3986*
+* [x] Implement UriReference based on *RFC3986*
 
 ## License
 
