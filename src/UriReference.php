@@ -28,8 +28,13 @@ class UriReference extends Uri
      * @param Query|null $query
      * @param Fragment|null $fragment
      */
-    public function __construct(Scheme $scheme = null, Authority $authority = null, Path $path = null, Query $query = null, Fragment $fragment = null)
-    {
+    public function __construct(
+        Scheme $scheme = null,
+        Authority $authority = null,
+        Path $path = null,
+        Query $query = null,
+        Fragment $fragment = null
+    ) {
         $this->scheme = $scheme;
         $this->authority = $authority;
         $this->path = $path ?? new Path();

@@ -56,8 +56,8 @@ class UriFactory
      * Taken from RFC 2396, Appendix B.
      * This expression doesn't parse IPv6 addresses.
      */
-    const URI_REGEXP = "^((?<scheme>[^:\\/?#]+):)?((\\/\\/(?<authority>[^\\/?#]*))?(?<path>[^?#]*)(\\?(?<query>[^#]*))?)?" .
-        "(#(?<fragment>.*))?";
+    const URI_REGEXP = "^((?<scheme>[^\\s:\\/?#]+):)?((\\/\\/(?<authority>[^\\s\\/?#]*))?(?<path>[^\\s?#]*)" .
+        "(\\?(?<query>[^\\s#]*))?)?(#(?<fragment>[^\\s]*))?";
 
     // Drop numeric, and  "+-." for now
     // Validation of character set is done by isValidAuthority
@@ -121,7 +121,7 @@ class UriFactory
      */
     public function createUri(string $uriString, Scheme $defaultScheme = null) : Uri
     {
-        if (preg_match("/" . self::URI_REGEXP . "/", $uriString, $matches)) {
+        if (preg_match("/^" . self::URI_REGEXP . "$/", $uriString, $matches)) {
             $scheme = $defaultScheme;
             if ($matches['scheme']) {
                 $scheme = $this->parseScheme($matches['scheme']);
@@ -156,7 +156,7 @@ class UriFactory
      */
     public function createUriReference(string $uriReferenceString) : UriReference
     {
-        if (preg_match("/" . self::URI_REGEXP . "/", $uriReferenceString, $matches)) {
+        if (preg_match("/^" . self::URI_REGEXP . "$/", $uriReferenceString, $matches)) {
             if (array_key_exists('scheme', $matches) && !empty($matches['scheme'])) {
                 $scheme = $this->parseScheme($matches['scheme']);
             }

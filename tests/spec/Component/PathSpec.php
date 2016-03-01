@@ -20,11 +20,19 @@ class PathSpec extends ObjectBehavior
         $this->shouldHaveType(Path::class);
     }
 
-    function it_can_add_and_remove_segments()
+    function it_can_be_created_as_absolute_and_relativet_with_segments()
     {
         $paths = ['a', 'b', 'b', ''];
         $this->beConstructedWith($paths);
         $this->getSegments()->shouldReturn($paths);
+        $this->toString()->shouldReturn('/a/b/b/');
+        $this->__toString()->shouldReturn('/a/b/b/');
+
+        $this->setRelative();
+        $this->toString()->shouldReturn('a/b/b/');
+        $this->__toString()->shouldReturn('a/b/b/');
+
+        $this->setAbsolute();
         $this->toString()->shouldReturn('/a/b/b/');
         $this->__toString()->shouldReturn('/a/b/b/');
     }
