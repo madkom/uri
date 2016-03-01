@@ -1,8 +1,8 @@
 Uniform Resource Identifier (URI) and Uniform Resource Locator (URL)
 ====================================================================
 
-This library implements URI and URL specification, based on Java impl and partially on 
-[RFC3986](https://tools.ietf.org/html/rfc3986). 
+This library implements URI and URL specification and URI Templates, based on [RFC3986](https://tools.ietf.org/html/rfc3986)
+and [RFC6570](https://tools.ietf.org/html/rfc6570) _(depends on external lib)_.
 
 ![PHP 7.0](https://img.shields.io/badge/PHP-7.0-8C9CB6.svg?style=flat)
 [![Build Status](https://travis-ci.org/madkom/uri.svg?branch=master)](https://travis-ci.org/madkom/uri)
@@ -14,6 +14,15 @@ This library implements URI and URL specification, based on Java impl and partia
 [![Issue Count](https://codeclimate.com/github/madkom/uri/badges/issue_count.svg)](https://codeclimate.com/github/madkom/uri)
 
 ---
+
+## Features
+
+This library can:
+
+* Parse URI [RFC3986](https://tools.ietf.org/html/rfc3986) into **Uri** object which includes wide abstraction with: **Scheme**, **Authority**, **Path**, **Query**, **Fragment** objects
+* Parse URIReference [RFC3986](https://tools.ietf.org/html/rfc3986) into **UriReference** object which can be resolved with valid **Uri** _(eg. `$resolvedUri = $uriReference->resolve($uri);`)_
+* Parse URITemplate [RFC6570](https://tools.ietf.org/html/rfc6570) into **UriTemplate** object which produces **Uri** or **UriReference** objects _(depends on template)_
+
 
 ## Installation
 
