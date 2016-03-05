@@ -8,6 +8,8 @@
 namespace Madkom\Uri\Component\Authority;
 
 use InvalidArgumentException;
+use Madkom\RegEx\Matcher;
+use Madkom\RegEx\Pattern;
 use Madkom\Uri\Component\Component;
 use Madkom\Uri\UriFactory;
 
@@ -88,7 +90,9 @@ class UserInfo implements Component
      */
     public function isValidUsername(string $username) : bool
     {
-        return 1 === preg_match("/^(" . UriFactory::USERINFO_CHARS_REGEX . "+)$/", $username);
+        $matcher = new Matcher(new Pattern("^(" . UriFactory::USERINFO_CHARS_REGEX . "+)$"));
+
+        return !empty($matcher->match($username));
     }
 
     /**
@@ -98,7 +102,9 @@ class UserInfo implements Component
      */
     public function isValidPassword(string $password) : bool
     {
-        return 1 === preg_match("/^(" . UriFactory::USERINFO_CHARS_REGEX . "*)$/", $password);
+        $matcher = new Matcher(new Pattern("^(" . UriFactory::USERINFO_CHARS_REGEX . "*)$"));
+
+        return !empty($matcher->match($password));
     }
 
     /**

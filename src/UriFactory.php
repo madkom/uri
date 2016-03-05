@@ -7,6 +7,8 @@
  */
 namespace Madkom\Uri;
 
+use Madkom\RegEx\Matcher;
+use Madkom\RegEx\Pattern;
 use Madkom\Uri\Component\Authority;
 use Madkom\Uri\Component\Authority\Host\IPv4;
 use Madkom\Uri\Component\Authority\Host\IPv6;
@@ -56,8 +58,8 @@ class UriFactory
      * Taken from RFC 2396, Appendix B.
      * This expression doesn't parse IPv6 addresses.
      */
-    const URI_REGEXP = "^((?<scheme>[^\\s:\\/?#]+):)?((\\/\\/(?<authority>[^\\s\\/?#]*))?(?<path>[^\\s?#]*)" .
-        "(\\?(?<query>[^\\s#]*))?)?(#(?<fragment>[^\\s]*))?";
+    const URI_REGEXP = "^((?<scheme>[^\\s:/?#]+):)?((//(?<authority>[^\\s/\\?#]*))?(?<path>[^\\s\\?#]*)" .
+        "(\\?(?<query>[^\\s#]*))?)?(#(?<fragment>[^\\s]*))?$";
 
     // Drop numeric, and  "+-." for now
     // Validation of character set is done by isValidAuthority
@@ -78,12 +80,13 @@ class UriFactory
     // since neither ':' nor '@' are allowed chars, we don't need to use non-greedy matching
     const USERINFO_FIELD_REGEX = "(?<user>" . self::USERINFO_CHARS_REGEX . "+):" . // Name at least one character
         "(?<password>" . self::USERINFO_CHARS_REGEX . "*)"; // password may be absent
-    const AUTHORITY_REGEX = "((?<userInfo>" . self::USERINFO_FIELD_REGEX . ")@)?" .
+    const AUTHORITY_REGEX = "^((?<userInfo>" . self::USERINFO_FIELD_REGEX . ")@)?" .
         "((?<ipv4>" . self::IPV4_REGEX . ")|\\[(?<ipv6>" . self::IPV6_REGEX . ")\\]|(?<hostname>" .
-    self::AUTHORITY_CHARS_REGEX . "))(:(?<port>\\d*))?";
+        self::AUTHORITY_CHARS_REGEX . "))(:(?<port>\\d*))?$";
 
     // Path delimiter
     const PATH_DELIMITER = '/';
+    const PATH_REGEX = "^([^/?#]*)$";
 
     // Match query string
     const QUERY_NAME_MATCH = "[" . self::RFC3986_UNRESERVED . "!$\\(\\)\\[\\]\\*\\+,;:@%]+";
@@ -99,16 +102,41 @@ class UriFactory
     const MODE_QUERY_DUPLICATE_AS_ARRAY   = 2;
     const MODE_QUERY_SEMICOLON_DELIMITER  = 4;
 
+    /**
+     * @var array Holds accepted scheme classes
+     */
     protected static $schemes = [
         Http::PROTOCOL => Http::class,
         Https::PROTOCOL => Https::class,
         Isbn::PROTOCOL => Isbn::class,
     ];
-
     /**
      * @var int Parsing mode (default: duplicate params set last)
      */
     protected $mode = self::MODE_QUERY_DUPLICATE_LAST;
+
+    /**
+     * @var Pattern Holds compiled URI_REGEXP pattern
+     */
+    protected $uriPattern;
+    /**
+     * @var Pattern Holds compiled AUTHORITY_REGEX pattern
+     */
+    protected $authorityPattern;
+    /**
+     * @var Pattern Holds query compiled QUERY_PARAMETER_MATCH pattern
+     */
+    protected $queryPattern;
+
+    /**
+     * UriFactory constructor.
+     */
+    public function __construct()
+    {
+        $this->uriPattern = new Pattern(self::URI_REGEXP);
+        $this->authorityPattern = new Pattern(self::AUTHORITY_REGEX);
+        $this->queryPattern = new Pattern(self::QUERY_PARAMETER_MATCH);
+    }
 
     /**
      * Create new Uri from string
@@ -121,23 +149,25 @@ class UriFactory
      */
     public function createUri(string $uriString, Scheme $defaultScheme = null) : Uri
     {
-        if (preg_match("/^" . self::URI_REGEXP . "$/", $uriString, $matches)) {
+        $matcher = new Matcher($this->uriPattern);
+        $match = $matcher->match($uriString);
+        if ($match) {
             $scheme = $defaultScheme;
-            if ($matches['scheme']) {
-                $scheme = $this->parseScheme($matches['scheme']);
+            if ($match['scheme']) {
+                $scheme = $this->parseScheme($match['scheme']);
             }
             if (null === $scheme) {
                 throw new MissingSchemeParseUriException("Malformed uri string, invalid scheme given: {$uriString}");
             }
-            if (array_key_exists('authority', $matches) && $matches['authority']) {
-                $authority = $this->parseAuthority($matches['authority']);
+            if (array_key_exists('authority', $match) && $match['authority']) {
+                $authority = $this->parseAuthority($match['authority']);
             }
-            $path = $this->parsePath($matches['path']);
-            if (array_key_exists('query', $matches) && $matches['query']) {
-                $query = $this->parseQuery($matches['query'], $this->mode);
+            $path = $this->parsePath($match['path']);
+            if (array_key_exists('query', $match) && $match['query']) {
+                $query = $this->parseQuery($match['query'], $this->mode);
             }
-            if (array_key_exists('fragment', $matches) && $matches['fragment']) {
-                $fragment = new Fragment($matches['fragment']);
+            if (array_key_exists('fragment', $match) && $match['fragment']) {
+                $fragment = new Fragment($match['fragment']);
             }
 
             return new Uri($scheme, $authority ?? null, $path, $query ?? null, $fragment ?? null);
@@ -156,21 +186,23 @@ class UriFactory
      */
     public function createUriReference(string $uriReferenceString) : UriReference
     {
-        if (preg_match("/^" . self::URI_REGEXP . "$/", $uriReferenceString, $matches)) {
-            if (array_key_exists('scheme', $matches) && !empty($matches['scheme'])) {
-                $scheme = $this->parseScheme($matches['scheme']);
+        $matcher = new Matcher($this->uriPattern);
+        $match = $matcher->match($uriReferenceString);
+        if ($match) {
+            if (array_key_exists('scheme', $match) && !empty($match['scheme'])) {
+                $scheme = $this->parseScheme($match['scheme']);
             }
-            if (array_key_exists('authority', $matches) && !empty($matches['authority'])) {
-                $authority = $this->parseAuthority($matches['authority']);
+            if (array_key_exists('authority', $match) && !empty($match['authority'])) {
+                $authority = $this->parseAuthority($match['authority']);
             }
-            if (array_key_exists('path', $matches) && !empty($matches['path'])) {
-                $path = $this->parsePath($matches['path']);
+            if (array_key_exists('path', $match) && !empty($match['path'])) {
+                $path = $this->parsePath($match['path']);
             }
-            if (array_key_exists('query', $matches) && !empty($matches['query'])) {
-                $query = $this->parseQuery($matches['query'], $this->mode);
+            if (array_key_exists('query', $match) && !empty($match['query'])) {
+                $query = $this->parseQuery($match['query'], $this->mode);
             }
-            if (array_key_exists('fragment', $matches) && !empty($matches['fragment'])) {
-                $fragment = new Fragment($matches['fragment']);
+            if (array_key_exists('fragment', $match) && !empty($match['fragment'])) {
+                $fragment = new Fragment($match['fragment']);
             }
 
             return new UriReference($scheme ?? null, $authority ?? null, $path ?? null, $query ?? null, $fragment ?? null);
@@ -204,7 +236,9 @@ class UriFactory
      */
     protected function parseAuthority(string $authorityString) : Authority
     {
-        if (preg_match("/^" . self::AUTHORITY_REGEX . "$/", $authorityString, $match)) {
+        $matcher = new Matcher($this->authorityPattern);
+        $match = $matcher->match($authorityString);
+        if ($match) {
             if ($match['ipv4']) {
                 $host = new IPv4($match['ipv4']);
             } elseif ($match['ipv6']) {
@@ -244,6 +278,7 @@ class UriFactory
     protected function parseQuery(string $queryString, int $mode = self::MODE_QUERY_DUPLICATE_LAST) : Query
     {
         $query = new Query();
+        $bracketsMatcher = new Matcher(new Pattern('^[^\[\]]+(\[[^\]]*\])+$'));
 
         // When duplicate detected replace with duplicate value
         if (!(self::MODE_QUERY_DUPLICATE_AS_ARRAY & $mode) && !(self::MODE_QUERY_DUPLICATE_WITH_COLON & $mode)) {
@@ -256,55 +291,55 @@ class UriFactory
         }
 
         // When duplicate detected turn value into an array or concatenated with colon when duplicate exists
-        if (preg_match_all("/" . self::QUERY_PARAMETER_MATCH . "/", $queryString, $matches, PREG_SET_ORDER)) {
-            foreach ($matches as $match) {
-                $name = $match['name'];
-                $value = $match['value'];
-                if (preg_match('/^[^\[\]]+(\[[^\]]*\])+$/', $name, $d) && (self::MODE_QUERY_DUPLICATE_AS_ARRAY & $mode)) {
-                    parse_str($match[1], $parsedParameter);
-                    if (sizeof($parsedParameter) === 1) {
-                        $name = key($parsedParameter);
-                        $value = reset($parsedParameter);
-                    }
+        $matcher = new Matcher($this->queryPattern);
+        $matches = $matcher->matchAll($queryString, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $name = $match['name'];
+            $value = $match['value'];
+            if ($bracketsMatcher->match($name) && (self::MODE_QUERY_DUPLICATE_AS_ARRAY & $mode)) {
+                parse_str($match[1], $parsedParameter);
+                if (sizeof($parsedParameter) === 1) {
+                    $name = key($parsedParameter);
+                    $value = reset($parsedParameter);
                 }
-                // If parameter already exists append value otherwise add parameter to Query
-                if ($query->exists(function (Parameter $parameter) use ($name) {
-                    return $parameter->getName() == $name;
-                })
-                ) {
-                    /** @var Parameter $parameter */
-                    foreach ($query as $parameter) {
-                        if ($parameter->getName() == $name) {
-                            $currentValue = $parameter->getValue();
-                            // Decode urlencoded value
-                            $value = is_array($value) ? $this->decodeUrlArrayValue($value) : $this->decodeUrlValue($value);
-                            switch (true) {
-                                // When duplicate detected turn value into an array
-                                case self::MODE_QUERY_DUPLICATE_AS_ARRAY & $mode:
-                                    // Decide how to merge existing value with parsed one
-                                    if (is_array($currentValue) && is_array($value)) {
-                                        $currentValue = array_merge($currentValue, $value);
-                                    } elseif (is_array($currentValue) && !is_array($value)) {
-                                        $currentValue[] = $value;
-                                    } elseif (!is_array($currentValue) && is_array($value)) {
-                                        $currentValue = array_merge([$currentValue], $value);
-                                    } else {
-                                        $currentValue = [$currentValue, $value];
-                                    }
-                                    break;
-                                // When duplicate detected concatenate colon and duplicate value
-                                case self::MODE_QUERY_DUPLICATE_WITH_COLON & $mode:
-                                    $currentValue .= ",{$value}";
-                                    break;
-                            }
-                            $query->remove($parameter);
-                            $query->add(new Parameter($name, $currentValue));
+            }
+            // If parameter already exists append value otherwise add parameter to Query
+            if ($query->exists(function (Parameter $parameter) use ($name) {
+                return $parameter->getName() == $name;
+            })
+            ) {
+                /** @var Parameter $parameter */
+                foreach ($query as $parameter) {
+                    if ($parameter->getName() == $name) {
+                        $currentValue = $parameter->getValue();
+                        // Decode urlencoded value
+                        $value = is_array($value) ? $this->decodeUrlArrayValue($value) : $this->decodeUrlValue($value);
+                        switch (true) {
+                            // When duplicate detected turn value into an array
+                            case self::MODE_QUERY_DUPLICATE_AS_ARRAY & $mode:
+                                // Decide how to merge existing value with parsed one
+                                if (is_array($currentValue) && is_array($value)) {
+                                    $currentValue = array_merge($currentValue, $value);
+                                } elseif (is_array($currentValue) && !is_array($value)) {
+                                    $currentValue[] = $value;
+                                } elseif (!is_array($currentValue) && is_array($value)) {
+                                    $currentValue = array_merge([$currentValue], $value);
+                                } else {
+                                    $currentValue = [$currentValue, $value];
+                                }
+                                break;
+                            // When duplicate detected concatenate colon and duplicate value
+                            case self::MODE_QUERY_DUPLICATE_WITH_COLON & $mode:
+                                $currentValue .= ",{$value}";
+                                break;
                         }
+                        $query->remove($parameter);
+                        $query->add(new Parameter($name, $currentValue));
                     }
-                } else {
-                    $value = is_array($value) ? $this->decodeUrlArrayValue($value) : $this->decodeUrlValue($value);
-                    $query->add(new Parameter($name, $value));
                 }
+            } else {
+                $value = is_array($value) ? $this->decodeUrlArrayValue($value) : $this->decodeUrlValue($value);
+                $query->add(new Parameter($name, $value));
             }
         }
 

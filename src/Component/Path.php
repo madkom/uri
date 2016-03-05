@@ -8,6 +8,9 @@
 namespace Madkom\Uri\Component;
 
 use InvalidArgumentException;
+use Madkom\RegEx\Matcher;
+use Madkom\RegEx\Pattern;
+use Madkom\Uri\UriFactory;
 
 /**
  * Class Path
@@ -17,7 +20,6 @@ use InvalidArgumentException;
 class Path
 {
     const DELIMITER = '/';
-    const PATH_REGEX = "/^([^\\/?#]*)$/";
     /**
      * @var array Holds path segments
      */
@@ -48,8 +50,9 @@ class Path
      */
     private function isValid(array $elements) : bool
     {
+        $matcher = new Matcher(new Pattern(UriFactory::PATH_REGEX));
         foreach ($elements as $segment) {
-            if (!preg_match(self::PATH_REGEX, $segment)) {
+            if (!$matcher->match($segment)) {
                 return false;
             }
         }

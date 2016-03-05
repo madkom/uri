@@ -4,12 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f24db28a914a8c5719d5d082efc5bfad",
-    "content-hash": "65fd51c1c2f3b95fb6bf234db126719c",
+    "hash": "7185a3c0183bc803f487b8c3b6e52381",
+    "content-hash": "d628b842afe0d2dca8bd3d0bbb05d9d2",
     "packages": [
         {
             "name": "madkom/collection",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/madkom/collection.git",
@@ -57,6 +57,57 @@
             ],
             "description": "Entity collection library with strict element typing",
             "time": "2016-02-23 09:15:24"
+        },
+        {
+            "name": "madkom/regex",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/madkom/regex.git",
+                "reference": "dc8d44a24723f0954518f7b984a315c6a3d0451a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/madkom/regex/zipball/dc8d44a24723f0954518f7b984a315c6a3d0451a",
+                "reference": "dc8d44a24723f0954518f7b984a315c6a3d0451a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~7"
+            },
+            "require-dev": {
+                "clover/dump": "dev-master",
+                "henrikbjorn/phpspec-code-coverage": "@dev",
+                "instaclick/object-calisthenics-sniffs": "@dev",
+                "jakub-onderka/php-console-highlighter": "0.*",
+                "jakub-onderka/php-parallel-lint": "0.*",
+                "mdarse/phpunit-notifier": "@dev",
+                "phpspec/phpspec": "@dev",
+                "phpspec/prophecy": "dev-master",
+                "phpunit/phpcov": "*",
+                "phpunit/phpunit": "5.*",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "^2.3",
+                "symfony/var-dumper": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Madkom\\RegEx\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michał Brzuchalski",
+                    "email": "m.brzuchalski@madkom.pl"
+                }
+            ],
+            "description": "PCRE RegEx wrapper around PHP regular expression functions",
+            "time": "2016-03-04 18:37:54"
         },
         {
             "name": "rize/uri-template",
@@ -2616,7 +2667,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "madkom/collection": 20,
         "henrikbjorn/phpspec-code-coverage": 20,
         "satooshi/php-coveralls": 20,
         "clover/dump": 20,

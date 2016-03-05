@@ -4,9 +4,10 @@
     "type": "library",
     "require": {
         "php": "~7",
-        "madkom/collection": "@dev",
+        "madkom/regex": "^1.0.0",
         "rize/uri-template": "^0.3.0",
-        "true/punycode": "^2.0"
+        "true/punycode": "^2.0",
+        "madkom/collection": "^1.0.0"
     },
     "require-dev": {
         "henrikbjorn/phpspec-code-coverage": "@dev",

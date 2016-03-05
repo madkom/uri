@@ -8,6 +8,8 @@
 namespace Madkom\Uri\Component\Authority\Host;
 
 use InvalidArgumentException;
+use Madkom\RegEx\Matcher;
+use Madkom\RegEx\Pattern;
 use Madkom\Uri\Component\Authority\Host;
 use TrueBV\Punycode;
 
@@ -59,7 +61,8 @@ class Name implements Host
         if (empty($address)) {
             throw new InvalidArgumentException('Empty hostname given');
         }
-        if (preg_match('/^((^[\s\.:\/])|([\s\.:\/]$)|(.*[\s:\/].*))$/', $address)) {
+        $matcher = new Matcher(new Pattern('^((^[\s\.:/])|([\s\.:/]$)|(.*[\s:/].*))$'));
+        if ($matcher->match($address)) {
             throw new InvalidArgumentException("Invalid hostname, given: {$address}");
         }
         $this->address = $this->getPunnycode()->encode($address);
