@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="Project tests" default="test" basedir=".">
+<project name="uri" default="test" basedir=".">
     <target name="test" depends="lint,phpspec,phpcs">
         <exec command="bin/phpcov merge --clover tests/coverage/clover.xml tests/coverage/" checkreturn="true" passthru="true"/>
         <!--<exec command="bin/coveralls" checkreturn="true" passthru="true"/>-->
@@ -14,5 +14,36 @@
     </target>
     <target name="phpcs" hidden="true">
         <exec command="bin/phpcs --colors -wp src --standard=PSR2,phpcs.xml" checkreturn="true" passthru="true"/>
+    </target>
+    <target name="docker">
+        <property name="status" value=""/>
+        <if>
+            <available file=".cid" type="file"/>
+            <then>
+                <loadfile property="cid" file=".cid"/>
+                <if>
+                    <equals arg1="${cid}" arg2=""/>
+                    <else>
+                        <exec command="docker inspect -f '{{.State.Status}}' ${cid}" outputProperty="status" checkreturn="true"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+        <if>
+            <equals arg1="${status}" arg2="running"/>
+            <then>
+                <exec command="docker exec -it ${cid} /bin/bash" passthru="true"/>
+            </then>
+            <else>
+                <if>
+                    <available file=".cid" type="file"/>
+                    <then>
+                        <delete file=".cid"/>
+                    </then>
+                </if>
+                <exec command="docker run -d -e TERM=xterm -v ${project.basedir}:/${phing.project.name} -w /${phing.project.name} --cidfile .cid registry.madkom.pl/php:7.0-ci sleep 999d" checkreturn="true" outputProperty="cid"/>
+                <exec command="docker exec -it ${cid} /bin/bash" passthru="true"/>
+            </else>
+        </if>
     </target>
 </project>

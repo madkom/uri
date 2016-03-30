@@ -12,7 +12,7 @@ namespace Madkom\Uri\Scheme;
  * @package Madkom\Uri\Scheme
  * @author Michał Brzuchalski <m.brzuchalski@madkom.pl>
  */
-class Http implements Scheme
+class Http extends Scheme
 {
     const PROTOCOL = 'http';
 
@@ -50,14 +50,5 @@ class Http implements Scheme
     public function canHandleFragment() : bool
     {
         return true;
-    }
-
-    /**
-     * Retrieve uri string representation
-     * @return string
-     */
-    public function toString() : string
-    {
-        return self::PROTOCOL;
     }
 }

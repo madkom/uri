@@ -12,35 +12,39 @@ namespace Madkom\Uri\Scheme;
  * @package Madkom\Uri
  * @author Michał Brzuchalski <m.brzuchalski@madkom.pl>
  */
-interface Scheme
+abstract class Scheme
 {
+    const PROTOCOL = '';
     /**
      * Checks if scheme handles Authority
      * @return bool
      */
-    public function canHandleAuthority() : bool;
+    abstract public function canHandleAuthority() : bool;
 
     /**
      * Checks if scheme handles Path
      * @return bool
      */
-    public function canHandlePath() : bool;
+    abstract public function canHandlePath() : bool;
 
     /**
      * Checks if scheme handles Query
      * @return bool
      */
-    public function canHandleQuery() : bool;
+    abstract public function canHandleQuery() : bool;
 
     /**
      * Checks if scheme handles Fragment
      * @return bool
      */
-    public function canHandleFragment() : bool;
+    abstract public function canHandleFragment() : bool;
 
     /**
      * Retrieve uri string representation
      * @return string
      */
-    public function toString() : string;
+    public function toString() : string
+    {
+        return static::PROTOCOL;
+    }
 }

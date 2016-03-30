@@ -12,7 +12,7 @@ namespace Madkom\Uri\Scheme;
  * @package Madkom\Uri\Scheme
  * @author Michał Brzuchalski <m.brzuchalski@madkom.pl>
  */
-class Isbn implements Scheme
+class Isbn extends Scheme
 {
     const PROTOCOL = 'isbn';
 
@@ -50,14 +50,5 @@ class Isbn implements Scheme
     public function canHandleFragment() : bool
     {
         return false;
-    }
-
-    /**
-     * Retrieve uri string representation
-     * @return string
-     */
-    public function toString() : string
-    {
-        return self::PROTOCOL;
     }
 }
