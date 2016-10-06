@@ -64,7 +64,7 @@ class UriFactory
     // Drop numeric, and  "+-." for now
     // Validation of character set is done by isValidAuthority
     //const AUTHORITY_CHARS_REGEX = "a-zA-Z0-9\\-\\."; // allows for IPV4 but not IPV6
-    const AUTHORITY_CHARS_REGEX = "((?=[a-z0-9-]{1,63}\\.)[a-z0-9]+(\\-[a-z0-9]+)*\\.)*[a-z]{2,63}"; // allows only for IPV4
+    const AUTHORITY_CHARS_REGEX = "((?=[a-z0-9\\-]{1,63}\\.)[a-z0-9]+(([a-z0-9]+[\\-a-z0-9]+)+\\.[a-z]{2,63})|[a-z0-9]+[\\-a-z0-9]*[a-z0-9])"; // allows only for IPV4
     const IPV6_REGEX = "[0-9a-fA-F:]+"; // do this as separate match because : could cause ambiguity with port prefix
     const INNER_OCTET_REGEX = "25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|[1-9]";
     const MIDDLE_OCTET_REGEX = "25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d";
